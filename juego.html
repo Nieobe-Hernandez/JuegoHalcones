@@ -1,749 +1,677 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Halcón UTEZ - Aventura del Conocimiento</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      body {
-        background: linear-gradient(135deg, #2d5a27, #4a7c59);
-        font-family: "Arial", sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        color: white;
-      }
+        body {
+            background: linear-gradient(135deg, #2d5a27, #4a7c59);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
 
-      .cta-button {
-        background: var(--secondary-color);
-        color: var(--white);
-        padding: 1rem 2.5rem;
-        border: none;
-        border-radius: 50px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-        position: relative;
-        overflow: hidden;
-        animation: slideInLeft 1s ease-out 0.6s both;
-      }
+        .game-container {
+            background: #1a1a1a;
+            border: 4px solid #2d5a27;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(45, 90, 39, 0.5);
+        }
 
-      .cta-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0, 148, 117, 0.4);
-      }
+        canvas {
+            background: linear-gradient(to bottom, #EDC9AF 0%, #C2B280 100%);
+            border: 2px solid #2d5a27;
+            display: block;
+        }
 
-      .game-container {
-        background: #1a1a1a;
-        border: 4px solid #2d5a27;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 0 20px rgba(45, 90, 39, 0.5);
-      }
+        .ui {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(45, 90, 39, 0.8);
+            border-radius: 5px;
+        }
 
-      canvas {
-        background: linear-gradient(to bottom, #87ceeb 0%, #98fb98 100%);
-        border: 2px solid #2d5a27;
-        display: block;
-      }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-      .ui {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        padding: 10px;
-        background: rgba(45, 90, 39, 0.8);
-        border-radius: 5px;
-      }
+        .bar {
+            width: 100px;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
 
-      .stat {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
+        .bar-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
 
-      .bar {
-        width: 100px;
-        height: 10px;
-        background: #333;
-        border-radius: 5px;
-        overflow: hidden;
-      }
+        .energy-bar { background: #FFD700; }
+        .health-bar { background: #FF4444; }
 
-      .bar-fill {
-        height: 100%;
-        transition: width 0.3s ease;
-      }
+        .message {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #FFD700;
+            min-height: 20px;
+        }
 
-      .energy-bar {
-        background: #ffd700;
-      }
-      .health-bar {
-        background: #ff4444;
-      }
+        .controls {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: #ccc;
+        }
 
-      .message {
-        text-align: center;
-        margin-top: 10px;
-        font-weight: bold;
-        color: #ffd700;
-        min-height: 20px;
-      }
+        .game-over, .level-complete {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            border: 3px solid #2d5a27;
+        }
 
-      .controls {
-        margin-top: 10px;
-        text-align: center;
-        font-size: 12px;
-        color: #ccc;
-      }
+        button {
+            background: #2d5a27;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
 
-      .game-over,
-      .level-complete {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 30px;
-        border-radius: 10px;
-        text-align: center;
-        border: 3px solid #2d5a27;
-      }
-
-      button {
-        background: #2d5a27;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 10px;
-        font-size: 16px;
-      }
-
-      button:hover {
-        background: #4a7c59;
-      }
+        button:hover {
+            background: #4a7c59;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="game-container">
-      <div class="ui">
-        <a href="./index.html" class="cta-button">Regresar</a>
-        <div class="stat">
-          <span>❤️ Vidas: <span id="lives">3</span></span>
+        <div class="ui">
+            <div class="stat">
+                <span>❤️ Vidas: <span id="lives">3</span></span>
+            </div>
+            <div class="stat">
+                <span>⚡ Energía:</span>
+                <div class="bar">
+                    <div class="bar-fill energy-bar" id="energyBar"></div>
+                </div>
+            </div>
+            <div class="stat">
+                <span>📚 Libros: <span id="books">0</span></span>
+            </div>
+            <div class="stat">
+                <span>Nivel: <span id="level">1</span></span>
+            </div>
         </div>
-        <div class="stat">
-          <span>⚡ Energía:</span>
-          <div class="bar">
-            <div class="bar-fill energy-bar" id="energyBar"></div>
-          </div>
+        
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+        
+        <div class="message" id="message">¡Vamos Halcón! Usa WASD o flechas para moverte</div>
+        
+        <div class="controls">
+            Controles: A/D o ←/→ = Mover | W o ↑ = Saltar | Mantén Shift = Correr
         </div>
-        <div class="stat">
-          <span>📚 Libros: <span id="books">0</span></span>
-        </div>
-        <div class="stat">
-          <span>Nivel: <span id="level">1</span></span>
-        </div>
-      </div>
-
-      <canvas id="gameCanvas" width="800" height="400"></canvas>
-
-      <div class="message" id="message">
-        ¡Vamos Halcón! Usa WASD o flechas para moverte
-      </div>
-
-      <div class="controls">
-        Controles: A/D o ←/→ = Mover | W o ↑ = Saltar | Mantén Shift = Correr
-      </div>
     </div>
 
     <script>
-      class Game {
-        constructor() {
-          this.canvas = document.getElementById("gameCanvas");
-          this.ctx = this.canvas.getContext("2d");
-          this.width = this.canvas.width;
-          this.height = this.canvas.height;
-
-          this.currentLevel = 1;
-          this.lives = 3;
-          this.books = 0;
-          this.gameState = "playing"; // playing, gameOver, levelComplete
-
-          this.keys = {};
-          this.gravity = 0.5;
-
-          this.motivationalPhrases = [
-            "¡Vamos Halcón!",
-            "¡Territorio de calidad!",
-            "¡No te rindas!",
-            "¡Aprender es volar alto!",
-            "¡El conocimiento te da alas!",
-            "¡UTEZ te impulsa al éxito!",
-            "¡Cada libro te hace más fuerte!",
-          ];
-
-          this.initializeLevel();
-          this.setupEventListeners();
-          this.gameLoop();
-        }
-
-        initializeLevel() {
-          this.player = new Player(50, 300);
-          this.platforms = this.createPlatforms();
-          this.enemies = this.createEnemies();
-          this.collectibles = this.createCollectibles();
-          this.goal = this.createGoal();
-        }
-
-        createPlatforms() {
-          const platforms = [
-            // Suelo principal
-            new Platform(0, 380, 800, 20, "#2d5a27"),
-          ];
-
-          if (this.currentLevel >= 1) {
-            platforms.push(
-              new Platform(200, 320, 150, 15, "#4a7c59"),
-              new Platform(400, 260, 150, 15, "#4a7c59"),
-              new Platform(600, 200, 150, 15, "#4a7c59")
-            );
-          }
-
-          if (this.currentLevel >= 2) {
-            platforms.push(
-              new Platform(100, 200, 100, 15, "#4a7c59"),
-              new Platform(500, 140, 100, 15, "#4a7c59"),
-              new Platform(300, 100, 200, 15, "#4a7c59")
-            );
-          }
-
-          if (this.currentLevel >= 3) {
-            platforms.push(
-              new Platform(50, 140, 80, 15, "#4a7c59"),
-              new Platform(650, 100, 100, 15, "#4a7c59"),
-              new Platform(150, 60, 120, 15, "#4a7c59")
-            );
-          }
-
-          return platforms;
-        }
-
-        createEnemies() {
-          const enemies = [];
-          const enemyCount = this.currentLevel;
-
-          for (let i = 0; i < enemyCount; i++) {
-            const x = 300 + i * 200;
-            enemies.push(new Enemy(x, 350));
-          }
-
-          return enemies;
-        }
-
-        createCollectibles() {
-          const collectibles = [];
-          const positions = [
-            { x: 275, y: 290 },
-            { x: 475, y: 230 },
-            { x: 675, y: 170 },
-            { x: 150, y: 170 },
-            { x: 550, y: 110 },
-            { x: 200, y: 30 },
-          ];
-
-          for (
-            let i = 0;
-            i < Math.min(positions.length, this.currentLevel + 2);
-            i++
-          ) {
-            collectibles.push(new Collectible(positions[i].x, positions[i].y));
-          }
-
-          return collectibles;
-        }
-
-        createGoal() {
-          return new Goal(720, 150);
-        }
-
-        setupEventListeners() {
-          document.addEventListener("keydown", (e) => {
-            this.keys[e.key.toLowerCase()] = true;
-            this.keys[e.code] = true;
-          });
-
-          document.addEventListener("keyup", (e) => {
-            this.keys[e.key.toLowerCase()] = false;
-            this.keys[e.code] = false;
-          });
-        }
-
-        update() {
-          if (this.gameState !== "playing") return;
-
-          this.player.update(this.keys, this.platforms);
-
-          // Actualizar enemigos
-          this.enemies.forEach((enemy) => {
-            enemy.update(this.platforms);
-
-            // Colisión con jugador
-            if (this.checkCollision(this.player, enemy)) {
-              this.playerHit();
+        class Game {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                
+                this.currentLevel = 1;
+                this.lives = 3;
+                this.books = 0;
+                this.gameState = 'playing'; // playing, gameOver, levelComplete
+                
+                this.keys = {};
+                this.gravity = 0.5;
+                
+                this.motivationalPhrases = [
+                    "¡Vamos Halcón!",
+                    "¡Territorio de calidad!",
+                    "¡No te rindas!",
+                    "¡Aprender es volar alto!",
+                    "¡El conocimiento te da alas!",
+                    "¡UTEZ te impulsa al éxito!",
+                    "¡Cada libro te hace más fuerte!"
+                ];
+                
+                this.initializeLevel();
+                this.setupEventListeners();
+                this.gameLoop();
             }
-          });
-
-          // Verificar colisiones con coleccionables
-          this.collectibles = this.collectibles.filter((collectible) => {
-            if (this.checkCollision(this.player, collectible)) {
-              this.books++;
-              this.player.energy = Math.min(100, this.player.energy + 20);
-              this.showMessage(this.getRandomPhrase());
-              return false;
+            
+            initializeLevel() {
+                this.player = new Player(50, 300);
+                this.platforms = this.createPlatforms();
+                this.enemies = this.createEnemies();
+                this.collectibles = this.createCollectibles();
+                this.goal = this.createGoal();
             }
-            return true;
-          });
-
-          // Verificar objetivo
-          if (this.checkCollision(this.player, this.goal)) {
-            this.levelComplete();
-          }
-
-          // Verificar si el jugador se cae
-          if (this.player.y > this.height) {
-            this.playerHit();
-          }
-
-          this.updateUI();
-        }
-
-        checkCollision(rect1, rect2) {
-          return (
-            rect1.x < rect2.x + rect2.width &&
-            rect1.x + rect1.width > rect2.x &&
-            rect1.y < rect2.y + rect2.height &&
-            rect1.y + rect1.height > rect2.y
-          );
-        }
-
-        playerHit() {
-          this.lives--;
-          if (this.lives <= 0) {
-            this.gameOver();
-          } else {
-            this.player.x = 50;
-            this.player.y = 300;
-            this.player.vx = 0;
-            this.player.vy = 0;
-            this.showMessage(
-              "¡Cuidado Halcón! Te quedan " + this.lives + " vidas"
-            );
-          }
-        }
-
-        levelComplete() {
-          this.gameState = "transition"; // Previene que se vuelva a llamar
-          this.currentLevel++;
-
-          if (this.currentLevel > 3) {
-            this.gameWin();
-          } else {
-            this.showMessage(
-              "¡Nivel completado! Preparándose para el nivel " +
-                this.currentLevel
-            );
-            setTimeout(() => {
-              this.gameState = "playing";
-              this.initializeLevel();
-            }, 2000);
-          }
-        }
-
-        gameOver() {
-          this.gameState = "gameOver";
-          this.showMessage("¡Game Over! Presiona R para reiniciar");
-        }
-
-        gameWin() {
-          this.gameState = "win";
-          this.showMessage(
-            "¡Felicidades! ¡Has completado todos los niveles! Presiona R para reiniciar."
-          );
-        }
-
-        restart() {
-          this.currentLevel = 1;
-          this.lives = 3;
-          this.books = 0;
-          this.gameState = "playing";
-          this.initializeLevel();
-        }
-
-        showMessage(text) {
-          document.getElementById("message").textContent = text;
-          setTimeout(() => {
-            if (this.gameState === "playing") {
-              document.getElementById("message").textContent = "";
+            
+            createPlatforms() {
+                const platforms = [
+                    // Suelo principal
+                    new Platform(0, 380, 800, 20, '#2d5a27'),
+                ];
+                
+                if (this.currentLevel >= 1) {
+                    platforms.push(
+                        new Platform(200, 320, 150, 15, '#4a7c59'),
+                        new Platform(400, 260, 150, 15, '#4a7c59'),
+                        new Platform(600, 200, 150, 15, '#4a7c59')
+                    );
+                }
+                
+                if (this.currentLevel >= 2) {
+                    platforms.push(
+                        new Platform(100, 200, 100, 15, '#4a7c59'),
+                        new Platform(500, 140, 100, 15, '#4a7c59'),
+                        new Platform(300, 100, 200, 15, '#4a7c59')
+                    );
+                }
+                
+                if (this.currentLevel >= 3) {
+                    platforms.push(
+                        new Platform(50, 140, 80, 15, '#4a7c59'),
+                        new Platform(650, 100, 100, 15, '#4a7c59'),
+                        new Platform(150, 60, 120, 15, '#4a7c59')
+                    );
+                }
+                
+                return platforms;
             }
-          }, 3000);
+            
+            createEnemies() {
+                const enemies = [];
+                const enemyCount = this.currentLevel;
+                
+                for (let i = 0; i < enemyCount; i++) {
+                    const x = 300 + (i * 200);
+                    enemies.push(new Enemy(x, 350));
+                }
+                
+                return enemies;
+            }
+            
+            createCollectibles() {
+                const collectibles = [];
+                const positions = [
+                    {x: 275, y: 290}, {x: 475, y: 230}, {x: 675, y: 170},
+                    {x: 150, y: 170}, {x: 550, y: 110}, {x: 200, y: 30}
+                ];
+                
+                for (let i = 0; i < Math.min(positions.length, this.currentLevel + 2); i++) {
+                    collectibles.push(new Collectible(positions[i].x, positions[i].y));
+                }
+                
+                return collectibles;
+            }
+            
+            createGoal() {
+                return new Goal(720, 150);
+            }
+            
+            setupEventListeners() {
+                document.addEventListener('keydown', (e) => {
+                    this.keys[e.key.toLowerCase()] = true;
+                    this.keys[e.code] = true;
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.key.toLowerCase()] = false;
+                    this.keys[e.code] = false;
+                });
+            }
+            
+            update() {
+                if (this.gameState !== 'playing') return;
+                
+                this.player.update(this.keys, this.platforms);
+                
+                // Actualizar enemigos
+                this.enemies.forEach(enemy => {
+                    enemy.update(this.platforms);
+                    
+                    // Colisión con jugador
+                    if (this.checkCollision(this.player, enemy)) {
+                        this.playerHit();
+                    }
+                });
+                
+                // Verificar colisiones con coleccionables
+                this.collectibles = this.collectibles.filter(collectible => {
+                    if (this.checkCollision(this.player, collectible)) {
+                        this.books++;
+                        this.player.energy = Math.min(100, this.player.energy + 20);
+                        this.showMessage(this.getRandomPhrase());
+                        return false;
+                    }
+                    return true;
+                });
+                
+                // Verificar objetivo
+                if (this.checkCollision(this.player, this.goal)) {
+                    this.levelComplete();
+                }
+                
+                // Verificar si el jugador se cae
+                if (this.player.y > this.height) {
+                    this.playerHit();
+                }
+                
+                this.updateUI();
+            }
+            
+            checkCollision(rect1, rect2) {
+                return rect1.x < rect2.x + rect2.width &&
+                       rect1.x + rect1.width > rect2.x &&
+                       rect1.y < rect2.y + rect2.height &&
+                       rect1.y + rect1.height > rect2.y;
+            }
+            
+            playerHit() {
+                this.lives--;
+                if (this.lives <= 0) {
+                    this.gameOver();
+                } else {
+                    this.player.x = 50;
+                    this.player.y = 300;
+                    this.player.vx = 0;
+                    this.player.vy = 0;
+                    this.showMessage("¡Cuidado Halcón! Te quedan " + this.lives + " vidas");
+                }
+            }
+            
+            levelComplete() {
+                this.gameState = 'transition'; // Previene que se vuelva a llamar
+                this.currentLevel++;
+                
+                if (this.currentLevel > 3) {
+                    this.gameWin();
+                } else {
+                    this.showMessage("¡Nivel completado! Preparándose para el nivel " + this.currentLevel);
+                    setTimeout(() => {
+                        this.gameState = 'playing';
+                        this.initializeLevel();
+                    }, 2000);
+                }
+            }
+
+            
+            gameOver() {
+                this.gameState = 'gameOver';
+                this.showMessage("¡Game Over! Presiona R para reiniciar");
+            }
+            
+            gameWin() {
+                this.gameState = 'win';
+                this.showMessage("¡Felicidades! ¡Has completado todos los niveles! Presiona R para reiniciar.");
+            }
+
+            
+            restart() {
+                this.currentLevel = 1;
+                this.lives = 3;
+                this.books = 0;
+                this.gameState = 'playing';
+                this.initializeLevel();
+            }
+            
+            showMessage(text) {
+                document.getElementById('message').textContent = text;
+                setTimeout(() => {
+                    if (this.gameState === 'playing') {
+                        document.getElementById('message').textContent = '';
+                    }
+                }, 3000);
+            }
+            
+            getRandomPhrase() {
+                return this.motivationalPhrases[Math.floor(Math.random() * this.motivationalPhrases.length)];
+            }
+            
+            updateUI() {
+                document.getElementById('lives').textContent = this.lives;
+                document.getElementById('books').textContent = this.books;
+                document.getElementById('level').textContent = this.currentLevel;
+                
+                const energyBar = document.getElementById('energyBar');
+                energyBar.style.width = this.player.energy + '%';
+            }
+            
+            render() {
+                // Limpiar canvas
+                this.ctx.clearRect(0, 0, this.width, this.height);
+                
+                // Dibujar plataformas
+                this.platforms.forEach(platform => platform.render(this.ctx));
+                
+                // Dibujar enemigos
+                this.enemies.forEach(enemy => enemy.render(this.ctx));
+                
+                // Dibujar coleccionables
+                this.collectibles.forEach(collectible => collectible.render(this.ctx));
+                
+                // Dibujar objetivo
+                this.goal.render(this.ctx);
+                
+                // Dibujar jugador
+                this.player.render(this.ctx);
+            }
+            
+            gameLoop() {
+                this.update();
+                this.render();
+                
+                // Verificar tecla R para reiniciar
+                if (this.keys['r'] && this.gameState !== 'playing') {
+                this.restart();
+            }
+                
+                requestAnimationFrame(() => this.gameLoop());
+            }
         }
-
-        getRandomPhrase() {
-          return this.motivationalPhrases[
-            Math.floor(Math.random() * this.motivationalPhrases.length)
-          ];
-        }
-
-        updateUI() {
-          document.getElementById("lives").textContent = this.lives;
-          document.getElementById("books").textContent = this.books;
-          document.getElementById("level").textContent = this.currentLevel;
-
-          const energyBar = document.getElementById("energyBar");
-          energyBar.style.width = this.player.energy + "%";
-        }
-
-        render() {
-          // Limpiar canvas
-          this.ctx.clearRect(0, 0, this.width, this.height);
-
-          // Dibujar plataformas
-          this.platforms.forEach((platform) => platform.render(this.ctx));
-
-          // Dibujar enemigos
-          this.enemies.forEach((enemy) => enemy.render(this.ctx));
-
-          // Dibujar coleccionables
-          this.collectibles.forEach((collectible) =>
-            collectible.render(this.ctx)
-          );
-
-          // Dibujar objetivo
-          this.goal.render(this.ctx);
-
-          // Dibujar jugador
-          this.player.render(this.ctx);
-        }
-
-        gameLoop() {
-          this.update();
-          this.render();
-
-          // Verificar tecla R para reiniciar
-          if (this.keys["r"] && this.gameState !== "playing") {
-            this.restart();
-          }
-
-          requestAnimationFrame(() => this.gameLoop());
-        }
-      }
-
-      class Player {
-        constructor(x, y) {
-          this.x = x;
-          this.y = y;
-          this.width = 30;
-          this.height = 30;
-          this.vx = 0;
-          this.vy = 0;
-          this.speed = 3;
-          this.jumpPower = 12;
-          this.onGround = false;
-          this.energy = 100;
-          this.maxEnergy = 100;
-        }
-
-        update(keys, platforms) {
-          // Movimiento horizontal
-          let isRunning =
-            keys["shift"] || keys["shiftleft"] || keys["shiftright"];
-          let moveSpeed = this.speed;
-
-          if (isRunning && this.energy > 0) {
-            moveSpeed = this.speed * 1.8;
-            this.energy = Math.max(0, this.energy - 0.5);
-          } else if (!isRunning && this.energy < this.maxEnergy) {
-            this.energy = Math.min(this.maxEnergy, this.energy + 0.2);
-          }
-
-          if (keys["a"] || keys["arrowleft"]) {
-            this.vx = -moveSpeed;
-          } else if (keys["d"] || keys["arrowright"]) {
-            this.vx = moveSpeed;
-          } else {
-            this.vx *= 0.8; // Fricción
-          }
-
-          // Salto
-          if ((keys["w"] || keys["arrowup"] || keys[" "]) && this.onGround) {
-            this.vy = -this.jumpPower;
-            this.onGround = false;
-          }
-
-          // Aplicar gravedad
-          this.vy += 0.5;
-
-          // Actualizar posición
-          this.x += this.vx;
-          this.y += this.vy;
-
-          // Colisiones con plataformas
-          this.onGround = false;
-          platforms.forEach((platform) => {
-            if (
-              this.x < platform.x + platform.width &&
-              this.x + this.width > platform.x &&
-              this.y < platform.y + platform.height &&
-              this.y + this.height > platform.y
-            ) {
-              // Colisión desde arriba
-              if (this.vy > 0 && this.y < platform.y) {
-                this.y = platform.y - this.height;
-                this.vy = 0;
-                this.onGround = true;
-              }
-              // Colisión desde abajo
-              else if (this.vy < 0 && this.y > platform.y) {
-                this.y = platform.y + platform.height;
-                this.vy = 0;
-              }
-              // Colisión lateral
-              else if (this.vx > 0 && this.x < platform.x) {
-                this.x = platform.x - this.width;
+        
+        class Player {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 30;
+                this.height = 30;
                 this.vx = 0;
-              } else if (this.vx < 0 && this.x > platform.x) {
-                this.x = platform.x + platform.width;
-                this.vx = 0;
-              }
-            }
-          });
-
-          // Límites del canvas
-          if (this.x < 0) this.x = 0;
-          if (this.x + this.width > 800) this.x = 800 - this.width;
-        }
-
-        render(ctx) {
-          // Cuerpo del halcón
-          ctx.fillStyle = "#8B4513";
-          ctx.fillRect(this.x, this.y, this.width, this.height);
-
-          // Cabeza
-          ctx.fillStyle = "#A0522D";
-          ctx.fillRect(this.x + 5, this.y - 5, 20, 15);
-
-          // Pico
-          ctx.fillStyle = "#FFD700";
-          ctx.beginPath();
-          ctx.moveTo(this.x + 25, this.y + 5);
-          ctx.lineTo(this.x + 35, this.y + 2);
-          ctx.lineTo(this.x + 25, this.y - 2);
-          ctx.fill();
-
-          // Ojo
-          ctx.fillStyle = "black";
-          ctx.fillRect(this.x + 18, this.y + 2, 3, 3);
-
-          // Alas
-          ctx.fillStyle = "#654321";
-          ctx.fillRect(this.x - 3, this.y + 8, 8, 15);
-          ctx.fillRect(this.x + 25, this.y + 8, 8, 15);
-
-          // Indicador de energía baja
-          if (this.energy < 20) {
-            ctx.fillStyle = "red";
-            ctx.font = "12px Arial";
-            ctx.fillText("!", this.x + this.width + 5, this.y);
-          }
-        }
-      }
-
-      class Platform {
-        constructor(x, y, width, height, color) {
-          this.x = x;
-          this.y = y;
-          this.width = width;
-          this.height = height;
-          this.color = color;
-        }
-
-        render(ctx) {
-          ctx.fillStyle = this.color;
-          ctx.fillRect(this.x, this.y, this.width, this.height);
-
-          // Borde superior más claro
-          ctx.fillStyle = "#6B8E5A";
-          ctx.fillRect(this.x, this.y, this.width, 3);
-        }
-      }
-
-      class Enemy {
-        constructor(x, y) {
-          this.x = x;
-          this.y = y;
-          this.width = 25;
-          this.height = 25;
-          this.vx = -1;
-          this.vy = 0;
-          this.onGround = false;
-        }
-
-        update(platforms) {
-          // Aplicar gravedad
-          this.vy += 0.5;
-
-          // Actualizar posición
-          this.x += this.vx;
-          this.y += this.vy;
-
-          // Colisiones con plataformas
-          this.onGround = false;
-          platforms.forEach((platform) => {
-            if (
-              this.x < platform.x + platform.width &&
-              this.x + this.width > platform.x &&
-              this.y < platform.y + platform.height &&
-              this.y + this.height > platform.y
-            ) {
-              if (this.vy > 0 && this.y < platform.y) {
-                this.y = platform.y - this.height;
                 this.vy = 0;
-                this.onGround = true;
-              }
+                this.speed = 3;
+                this.jumpPower = 12;
+                this.onGround = false;
+                this.energy = 100;
+                this.maxEnergy = 100;
             }
-          });
-
-          // Cambiar dirección en los bordes
-          if (this.x <= 0 || this.x + this.width >= 800) {
-            this.vx = -this.vx;
-          }
+            
+            update(keys, platforms) {
+                // Movimiento horizontal
+                let isRunning = keys['shift'] || keys['shiftleft'] || keys['shiftright'];
+                let moveSpeed = this.speed;
+                
+                if (isRunning && this.energy > 0) {
+                    moveSpeed = this.speed * 1.8;
+                    this.energy = Math.max(0, this.energy - 0.5);
+                } else if (!isRunning && this.energy < this.maxEnergy) {
+                    this.energy = Math.min(this.maxEnergy, this.energy + 0.2);
+                }
+                
+                if (keys['a'] || keys['arrowleft']) {
+                    this.vx = -moveSpeed;
+                } else if (keys['d'] || keys['arrowright']) {
+                    this.vx = moveSpeed;
+                } else {
+                    this.vx *= 0.8; // Fricción
+                }
+                
+                // Salto
+                if ((keys['w'] || keys['arrowup'] || keys[' ']) && this.onGround) {
+                    this.vy = -this.jumpPower;
+                    this.onGround = false;
+                }
+                
+                // Aplicar gravedad
+                this.vy += 0.5;
+                
+                // Actualizar posición
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Colisiones con plataformas
+                this.onGround = false;
+                platforms.forEach(platform => {
+                    if (this.x < platform.x + platform.width &&
+                        this.x + this.width > platform.x &&
+                        this.y < platform.y + platform.height &&
+                        this.y + this.height > platform.y) {
+                        
+                        // Colisión desde arriba
+                        if (this.vy > 0 && this.y < platform.y) {
+                            this.y = platform.y - this.height;
+                            this.vy = 0;
+                            this.onGround = true;
+                        }
+                        // Colisión desde abajo
+                        else if (this.vy < 0 && this.y > platform.y) {
+                            this.y = platform.y + platform.height;
+                            this.vy = 0;
+                        }
+                        // Colisión lateral
+                        else if (this.vx > 0 && this.x < platform.x) {
+                            this.x = platform.x - this.width;
+                            this.vx = 0;
+                        } else if (this.vx < 0 && this.x > platform.x) {
+                            this.x = platform.x + platform.width;
+                            this.vx = 0;
+                        }
+                    }
+                });
+                
+                // Límites del canvas
+                if (this.x < 0) this.x = 0;
+                if (this.x + this.width > 800) this.x = 800 - this.width;
+            }
+            
+            render(ctx) {
+                // Cuerpo del halcón
+                ctx.fillStyle = '#103963';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
+                // Cabeza
+                ctx.fillStyle = '#245b94';
+                ctx.fillRect(this.x + 5, this.y - 5, 20, 15);
+                
+                // Pico
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+                ctx.moveTo(this.x + 25, this.y + 5);
+                ctx.lineTo(this.x + 35, this.y + 2);
+                ctx.lineTo(this.x + 25, this.y - 2);
+                ctx.fill();
+                
+                // Ojo
+                ctx.fillStyle = 'black';
+                ctx.fillRect(this.x + 18, this.y + 2, 3, 3);
+                
+                // Alas
+                ctx.fillStyle = '#089b7d';
+                ctx.fillRect(this.x - 3, this.y + 8, 8, 15);
+                ctx.fillRect(this.x + 25, this.y + 8, 8, 15);
+                
+                // Indicador de energía baja
+                if (this.energy < 20) {
+                    ctx.fillStyle = 'red';
+                    ctx.font = '12px Arial';
+                    ctx.fillText('!', this.x + this.width + 5, this.y);
+                }
+            }
         }
-
-        render(ctx) {
-          // Enemigo (obstáculo académico)
-          ctx.fillStyle = "#8B0000";
-          ctx.fillRect(this.x, this.y, this.width, this.height);
-
-          // Ojos
-          ctx.fillStyle = "white";
-          ctx.fillRect(this.x + 5, this.y + 5, 4, 4);
-          ctx.fillRect(this.x + 16, this.y + 5, 4, 4);
-
-          ctx.fillStyle = "black";
-          ctx.fillRect(this.x + 6, this.y + 6, 2, 2);
-          ctx.fillRect(this.x + 17, this.y + 6, 2, 2);
-
-          // Símbolo de dificultad
-          ctx.fillStyle = "white";
-          ctx.font = "12px Arial";
-          ctx.fillText("X", this.x + 9, this.y + 20);
+        
+        class Platform {
+            constructor(x, y, width, height, color) {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                this.color = color;
+            }
+            
+            render(ctx) {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
+                // Borde superior más claro
+                ctx.fillStyle = '#6B8E5A';
+                ctx.fillRect(this.x, this.y, this.width, 3);
+            }
         }
-      }
-
-      class Collectible {
-        constructor(x, y) {
-          this.x = x;
-          this.y = y;
-          this.width = 20;
-          this.height = 20;
-          this.bounce = 0;
+        
+        class Enemy {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 25;
+                this.height = 25;
+                this.vx = -1;
+                this.vy = 0;
+                this.onGround = false;
+            }
+            
+            update(platforms) {
+                // Aplicar gravedad
+                this.vy += 0.5;
+                
+                // Actualizar posición
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Colisiones con plataformas
+                this.onGround = false;
+                platforms.forEach(platform => {
+                    if (this.x < platform.x + platform.width &&
+                        this.x + this.width > platform.x &&
+                        this.y < platform.y + platform.height &&
+                        this.y + this.height > platform.y) {
+                        
+                        if (this.vy > 0 && this.y < platform.y) {
+                            this.y = platform.y - this.height;
+                            this.vy = 0;
+                            this.onGround = true;
+                        }
+                    }
+                });
+                
+                // Cambiar dirección en los bordes
+                if (this.x <= 0 || this.x + this.width >= 800) {
+                    this.vx = -this.vx;
+                }
+            }
+            
+            render(ctx) {
+                // Enemigo (obstáculo académico)
+                ctx.fillStyle = '#8B0000';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
+                // Ojos
+                ctx.fillStyle = 'white';
+                ctx.fillRect(this.x + 5, this.y + 5, 4, 4);
+                ctx.fillRect(this.x + 16, this.y + 5, 4, 4);
+                
+                ctx.fillStyle = 'black';
+                ctx.fillRect(this.x + 6, this.y + 6, 2, 2);
+                ctx.fillRect(this.x + 17, this.y + 6, 2, 2);
+                
+                // Símbolo de dificultad
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.fillText('X', this.x + 9, this.y + 20);
+            }
         }
-
-        render(ctx) {
-          this.bounce += 0.1;
-          const offsetY = Math.sin(this.bounce) * 3;
-
-          // Libro del conocimiento
-          ctx.fillStyle = "#2d5a27";
-          ctx.fillRect(this.x, this.y + offsetY, this.width, this.height);
-
-          // Páginas
-          ctx.fillStyle = "white";
-          ctx.fillRect(
-            this.x + 2,
-            this.y + 2 + offsetY,
-            this.width - 4,
-            this.height - 4
-          );
-
-          // Líneas del texto
-          ctx.fillStyle = "#333";
-          for (let i = 0; i < 3; i++) {
-            ctx.fillRect(
-              this.x + 4,
-              this.y + 6 + i * 3 + offsetY,
-              this.width - 8,
-              1
-            );
-          }
-
-          // Brillo
-          ctx.fillStyle = "rgba(255, 215, 0, 0.3)";
-          ctx.fillRect(
-            this.x - 2,
-            this.y - 2 + offsetY,
-            this.width + 4,
-            this.height + 4
-          );
+        
+        class Collectible {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 20;
+                this.height = 20;
+                this.bounce = 0;
+            }
+            
+            render(ctx) {
+                this.bounce += 0.1;
+                const offsetY = Math.sin(this.bounce) * 3;
+                
+                // Libro del conocimiento
+                ctx.fillStyle = '#2d5a27';
+                ctx.fillRect(this.x, this.y + offsetY, this.width, this.height);
+                
+                // Páginas
+                ctx.fillStyle = 'white';
+                ctx.fillRect(this.x + 2, this.y + 2 + offsetY, this.width - 4, this.height - 4);
+                
+                // Líneas del texto
+                ctx.fillStyle = '#333';
+                for (let i = 0; i < 3; i++) {
+                    ctx.fillRect(this.x + 4, this.y + 6 + (i * 3) + offsetY, this.width - 8, 1);
+                }
+                
+                // Brillo
+                ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+                ctx.fillRect(this.x - 2, this.y - 2 + offsetY, this.width + 4, this.height + 4);
+            }
         }
-      }
-
-      class Goal {
-        constructor(x, y) {
-          this.x = x;
-          this.y = y;
-          this.width = 40;
-          this.height = 60;
-          this.glow = 0;
+        
+        class Goal {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 40;
+                this.height = 60;
+                this.glow = 0;
+            }
+            
+            render(ctx) {
+                this.glow += 0.05;
+                const glowIntensity = Math.sin(this.glow) * 0.3 + 0.7;
+                
+                // Aula/Portal final
+                ctx.fillStyle = `rgba(45, 90, 39, ${glowIntensity})`;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
+                // Puerta
+                ctx.fillStyle = '#654321';
+                ctx.fillRect(this.x + 5, this.y + 15, this.width - 10, this.height - 15);
+                
+                // Ventana
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(this.x + 10, this.y + 5, this.width - 20, 8);
+                
+                // Texto
+                ctx.fillStyle = 'white';
+                ctx.font = '10px Arial';
+                ctx.fillText('AULA', this.x + 8, this.y + 35);
+                ctx.fillText('FINAL', this.x + 6, this.y + 45);
+            }
         }
-
-        render(ctx) {
-          this.glow += 0.05;
-          const glowIntensity = Math.sin(this.glow) * 0.3 + 0.7;
-
-          // Aula/Portal final
-          ctx.fillStyle = `rgba(45, 90, 39, ${glowIntensity})`;
-          ctx.fillRect(this.x, this.y, this.width, this.height);
-
-          // Puerta
-          ctx.fillStyle = "#654321";
-          ctx.fillRect(
-            this.x + 5,
-            this.y + 15,
-            this.width - 10,
-            this.height - 15
-          );
-
-          // Ventana
-          ctx.fillStyle = "#FFD700";
-          ctx.fillRect(this.x + 10, this.y + 5, this.width - 20, 8);
-
-          // Texto
-          ctx.fillStyle = "white";
-          ctx.font = "10px Arial";
-          ctx.fillText("AULA", this.x + 8, this.y + 35);
-          ctx.fillText("FINAL", this.x + 6, this.y + 45);
-        }
-      }
-
-      // Inicializar el juego
-      window.addEventListener("load", () => {
-        new Game();
-      });
+        
+        // Inicializar el juego
+        window.addEventListener('load', () => {
+            new Game();
+        });
     </script>
-  </body>
+</body>
 </html>
