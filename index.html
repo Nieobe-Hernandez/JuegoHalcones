@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Alas del Conocimiento - UTEZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #002E60;
+            --secondary-color: #009475;
+            --white: #FFFFFF;
+            --light-gray: #E0E0E0;
+            --dark-gray: #333;
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 46, 96, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--white);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="grad1" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" /><stop offset="100%" style="stop-color:rgba(255,255,255,0);stop-opacity:1" /></radialGradient></defs><circle cx="200" cy="300" r="100" fill="url(%23grad1)" /><circle cx="800" cy="200" r="80" fill="url(%23grad1)" /><circle cx="600" cy="700" r="120" fill="url(%23grad1)" /></svg>') no-repeat center center;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 1rem;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .hero-content .slogan {
+            font-size: 1.3rem;
+            color: var(--light-gray);
+            margin-bottom: 2rem;
+            animation: slideInLeft 1s ease-out 0.3s both;
+        }
+
+        .cta-button {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            animation: slideInLeft 1s ease-out 0.6s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 148, 117, 0.4);
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .falcon {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .falcon::before {
+            content: '🦅';
+            font-size: 8rem;
+            animation: fly 4s ease-in-out infinite;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .floating-item {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.7;
+            animation: floatAround 6s linear infinite;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        /* Game Description */
+        .game-description {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .description-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .description-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--dark-gray);
+        }
+
+        .game-mockup {
+            background: var(--gradient);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 46, 96, 0.2);
+        }
+
+        .game-mockup::before {
+            content: '🎮';
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        /* Features */
+        .features {
+            background: var(--white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 148, 117, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .feature-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        /* Marketing Campaign */
+        .marketing {
+            background: var(--gradient);
+            color: var(--white);
+        }
+
+        .marketing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .marketing-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .marketing-item i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--light-gray);
+        }
+
+        .scrolling-text {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .scrolling-content {
+            display: flex;
+            animation: scroll 15s linear infinite;
+            white-space: nowrap;
+        }
+
+        .scrolling-phrase {
+            margin-right: 3rem;
+            font-weight: 600;
+        }
+
+        /* Trailer Section */
+        .trailer {
+            background: #1a1a1a;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="%23002E60" width="1000" height="1000"/><circle cx="100" cy="100" r="50" fill="%23009475" opacity="0.3"/><circle cx="900" cy="200" r="30" fill="%23009475" opacity="0.5"/><circle cx="200" cy="800" r="40" fill="%23009475" opacity="0.4"/></svg>') repeat;
+            animation: parallaxMove 20s linear infinite;
+        }
+
+        .trailer-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .trailer-visual {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            background: var(--gradient);
+            border-radius: 20px;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flying-falcon {
+            font-size: 4rem;
+            animation: flyAcross 3s ease-in-out infinite;
+        }
+
+        .floating-books {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            animation: floatBooks 4s ease-in-out infinite;
+        }
+
+        .floating-medals {
+            position: absolute;
+            top: 30%;
+            right: 10%;
+            font-size: 2rem;
+            animation: floatMedals 4s ease-in-out infinite 1s;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--white);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.8;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--white);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fly {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translate(100px, -100px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        @keyframes parallaxMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50px); }
+        }
+
+        @keyframes flyAcross {
+            0%, 100% { transform: translateX(-20px); }
+            50% { transform: translateX(20px); }
+        }
+
+        @keyframes floatBooks {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+
+        @keyframes floatMedals {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(-10deg); }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary-color);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .description-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .marketing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .falcon {
+                width: 200px;
+                height: 200px;
+            }
+
+            .falcon::before {
+                font-size: 5rem;
+            }
+        }
+
+        /* Hover Effects for Falcon */
+        .falcon:hover::after {
+            content: '¡El conocimiento te da alas! ✨';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#inicio" class="logo">🎓 UTEZ</a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#juego">Juego</a></li>
+                <li><a href="#caracteristicas">Características</a></li>
+                <li><a href="#trailer">Trailer</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>🎮 Alas del Conocimiento</h1>
+                <p class="slogan">"Estudia, vuela, conquista. ¡Haz historia en la UTEZ!"</p>
+                <button class="cta-button" onclick="openModal()">¡Jugar ahora!</button>
+            </div>
+            <div class="hero-visual">
+                <div class="falcon"></div>
+                <div class="floating-elements">
+                    <div class="floating-item" style="top: 20%; left: 10%; animation-delay: 0s;">📚</div>
+                    <div class="floating-item" style="top: 60%; right: 15%; animation-delay: 2s;">🏆</div>
+                    <div class="floating-item" style="top: 80%; left: 20%; animation-delay: 4s;">⚡</div>
+                    <div class="floating-item" style="top: 30%; right: 30%; animation-delay: 1s;">🎯</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Description -->
+    <section id="juego" class="section game-description">
+        <div class="container">
+            <h2 class="section-title">Descubre la Aventura</h2>
+            <div class="description-grid">
+                <div class="description-text">
+                    <p>En <strong>Alas del Conocimiento</strong>, acompaña al halcón, la orgullosa mascota de la UTEZ, en una emocionante aventura educativa a través de los campus. Navega por desafíos académicos, resuelve enigmas de diferentes carreras y demuestra que el conocimiento verdaderamente te da alas para volar hacia el éxito.</p>
+                    <br>
+                    <p>Este videojuego institucional combina diversión y aprendizaje, representando los valores y la excelencia académica que caracterizan a nuestra universidad. Cada nivel está diseñado para inspirar, educar y conectar a nuestra comunidad estudiantil con la identidad UTEZ.</p>
+                </div>
+                <div class="game-mockup">
+                    <h3>Vista Previa del Juego</h3>
+                    <p>Interfaz intuitiva y gráficos modernos diseñados especialmente para la experiencia UTEZ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="caracteristicas" class="section features">
+        <div class="container">
+            <h2 class="section-title">Características del Juego</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Sistema de Vidas</h3>
+                    <p>Gestiona estratégicamente tus oportunidades de aprendizaje. Cada error es una lección, cada acierto te acerca a la victoria.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Energía Educativa</h3>
+                    <p>Recarga tu poder de conocimiento resolviendo desafíos académicos y desbloqueando nuevas habilidades.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏛️</div>
+                    <h3 class="feature-title">Aula de Inicio</h3>
+                    <p>Nivel básico perfecto para familiarizarte con los controles y mecánicas fundamentales del juego.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏢</div>
+                    <h3 class="feature-title">Edificio de Retos</h3>
+                    <p>Desafíos intermedios que pondrán a prueba tus conocimientos y habilidades estratégicas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗼</div>
+                    <h3 class="feature-title">Torre del Conocimiento</h3>
+                    <p>El nivel más desafiante reservado para los verdaderos maestros del saber UTEZ.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Objetivo del Juego</h3>
+                    <p>Conviértete en el Héroe del Conocimiento UTEZ y inspira a otros a alcanzar la excelencia académica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marketing Campaign -->
+    <section class="section marketing">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Campaña de Marketing</h2>
+            <div class="marketing-grid">
+                <div class="marketing-item">
+                    <i class="fas fa-users"></i>
+                    <h3>Público Objetivo</h3>
+                    <p>Estudiantes UTEZ de todas las carreras, futuros aspirantes y comunidad universitaria apasionada por la innovación educativa.</p>
+                </div>
+                <div class="marketing-item">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Diferenciadores</h3>
+                    <p>Primer videojuego institucional universitario en México que combina identidad institucional con gamificación educativa avanzada.</p>
+                </div>
+                <div class="marketing-item">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Logros Especiales</h3>
+                    <p>Desbloquea títulos únicos como "Héroe del Aula", "Volador del Saber" y "Conquistador del Conocimiento".</p>
+                </div>
+            </div>
+            
+            <div class="scrolling-text">
+                <div class="scrolling-content">
+                    <span class="scrolling-phrase">¡Nunca pares de aprender!</span>
+                    <span class="scrolling-phrase">El conocimiento te da alas</span>
+                    <span class="scrolling-phrase">Vuela hacia el éxito</span>
+                    <span class="scrolling-phrase">UTEZ: Excelencia e Innovación</span>
+                    <span class="scrolling-phrase">¡Haz historia en tu universidad!</span>
+                    <span class="scrolling-phrase">¡Nunca pares de aprender!</span>
+                    <span class="scrolling-phrase">El conocimiento te da alas</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trailer Section -->
+    <section id="trailer" class="section trailer">
+        <div class="parallax-bg"></div>
+        <div class="container">
+            <div class="trailer-content">
+                <h2 class="section-title" style="color: white;">Experiencia Visual</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 2rem;">Sumérgete en el mundo de Alas del Conocimiento</p>
+                
+                <div class="trailer-visual">
+                    <div class="flying-falcon">🦅</div>
+                    <div class="floating-books">📚📖📝</div>
+                    <div class="floating-medals">🏆🥇⭐</div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="cta-button" onclick="alert('¡Próximamente disponible el tráiler completo!')">Ver Tráiler Completo</button>
+                    <button class="cta-button" style="margin-left: 1rem; background: transparent; border: 2px solid var(--secondary-color);" onclick="alert('¡Folleto PDF disponible próximamente!')">Descargar Folleto PDF</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Universidad Tecnológica Emiliano Zapata</h3>
+                    <p>Innovación educativa a través de la tecnología y el compromiso con la excelencia académica.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <p><i class="fas fa-envelope"></i> info@utez.edu.mx</p>
+                    <p><i class="fas fa-phone"></i> +52 777 362 7797</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Av. Universidad Tecnológica 1, Emiliano Zapata, Morelos</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Desarrollo del Juego</h3>
+                    <p>Equipo de Desarrollo UTEZ</p>
+                    <p>Departamento de Tecnologías de la Información</p>
+                    <p>© 2025 - Alas del Conocimiento</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <p><a href="#inicio" style="color: var(--light-gray); text-decoration: none;">🏠 Inicio</a></p>
+                    <p><a href="#juego" style="color: var(--light-gray); text-decoration: none;">🎮 Sobre el Juego</a></p>
+                    <p><a href="#caracteristicas" style="color: var(--light-gray); text-decoration: none;">⭐ Características</a></p>
+                    <p><a href="#trailer" style="color: var(--light-gray); text-decoration: none;">🎬 Trailer</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Universidad Tecnológica Emiliano Zapata - Todos los derechos reservados</p>
+                <p>Alas del Conocimiento - Primer videojuego institucional UTEZ</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="color: var(--primary-color); text-align: center; margin-bottom: 1rem;">🎮 ¡Bienvenido a Alas del Conocimiento!</h2>
+            <div style="text-align: center; margin: 2rem 0;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🦅</div>
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">El halcón UTEZ te está esperando para comenzar esta increíble aventura educativa.</p>
+                <div style="background: var(--gradient); color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <h3>🚀 Próximamente Disponible</h3>
+                    <p>Estamos finalizando los últimos detalles para ofrecerte la mejor experiencia de juego. ¡Mantente atento a los anuncios oficiales!</p>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+                    <button class="cta-button" onclick="alert('¡Te notificaremos cuando esté disponible!')">Notificarme</button>
+                    <button class="cta-button" style="background: var(--primary-color);" onclick="closeModal()">Explorar Más</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(0, 46, 96, 0.98)';
+            } else {
+                header.style.background = 'rgba(0, 46, 96, 0.95)';
+            }
+        });
+
+        // Modal functionality
+        function openModal() {
+            document.getElementById('gameModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('gameModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('gameModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animations
+        document.querySelectorAll('.feature-card, .marketing-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Dynamic floating elements
+        function createFloatingElement() {
+            const elements = ['📚', '🏆', '⚡', '🎯', '🌟', '💡', '🚀'];
+            const element = document.createElement('div');
+            element.textContent = elements[Math.floor(Math.random() * elements.length)];
+            element.style.position = 'fixed';
+            element.style.fontSize = '2rem';
+            element.style.opacity = '0.6';
+            element.style.pointerEvents = 'none';
+            element.style.zIndex = '10';
+            element.style.left = Math.random() * window.innerWidth + 'px';
+            element.style.top = window.innerHeight + 'px';
+            element.style.animation = 'floatUp 4s linear forwards';
+            
+            document.body.appendChild(element);
+            
+            setTimeout(() => {
+                element.remove();
+            }, 4000);
+        }
+
+        // Add floating elements periodically
+        setInterval(createFloatingElement, 3000);
+
+        // CSS for floating up animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatUp {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 0.6;
+                }
+                50% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-${window.innerHeight + 100}px) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Interactive falcon hover effect
+        const falcon = document.querySelector('.falcon');
+        const phrases = [
+            '¡El conocimiento te da alas! ✨',
+            '¡Vuela hacia el éxito! 🚀',
+            '¡UTEZ te impulsa! 🎓',
+            '¡Nunca pares de aprender! 📚',
+            '¡Haz historia! 🏆'
+        ];
+
+        falcon.addEventListener('mouseenter', () => {
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            falcon.setAttribute('data-phrase', randomPhrase);
+        });
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = [
+            'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+            'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+            'KeyB', 'KeyA'
+        ];
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.code);
+            if (konamiCode.length > konamiSequence.length) {
+                konamiCode.shift();
+            }
+            
+            if (konamiCode.join('') === konamiSequence.join('')) {
+                document.body.style.animation = 'rainbow 2s infinite';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                    alert('🎉 ¡Código secreto activado! Eres un verdadero gamer UTEZ 🦅');
+                }, 2000);
+                konamiCode = [];
+            }
+        });
+
+        // Add rainbow animation for easter egg
+        const rainbowStyle = document.createElement('style');
+        rainbowStyle.textContent = `
+            @keyframes rainbow {
+                0% { filter: hue-rotate(0deg); }
+                25% { filter: hue-rotate(90deg); }
+                50% { filter: hue-rotate(180deg); }
+                75% { filter: hue-rotate(270deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(rainbowStyle);
+
+        // Performance optimization: Lazy load animations
+        const lazyAnimationObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                    lazyAnimationObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        // Apply lazy loading to heavy animation elements
+        document.querySelectorAll('.trailer-visual, .parallax-bg').forEach(el => {
+            lazyAnimationObserver.observe(el);
+        });
+
+        // Social media share functionality
+        function shareOnSocial(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent('🎮 Alas del Conocimiento - UTEZ');
+            const description = encodeURIComponent('¡Descubre el primer videojuego institucional de la UTEZ!');
+            
+            let shareUrl = '';
+            
+            switch(platform) {
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://wa.me/?text=${title}%20${url}`;
+                    break;
+            }
+            
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+        }
+
+        // Add share buttons functionality to social links
+        document.querySelectorAll('.social-links a').forEach((link, index) => {
+            const platforms = ['facebook', 'twitter', 'instagram', 'youtube'];
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (platforms[index] === 'facebook' || platforms[index] === 'twitter') {
+                    shareOnSocial(platforms[index]);
+                } else {
+                    alert(`¡Síguenos en ${platforms[index]} para más contenido UTEZ!`);
+                }
+            });
+        });
+
+        // Console easter egg for developers
+        console.log(`
+        🦅 ¡Hola, desarrollador curioso!
+        
+        Bienvenido al código de "Alas del Conocimiento"
+        El primer videojuego institucional de la UTEZ
+        
+        Desarrollado con ❤️ para la comunidad UTEZ
+        
+        ¿Te interesa contribuir al proyecto?
+        Contacta al equipo de desarrollo: dev@utez.edu.mx
+        
+        🚀 ¡El conocimiento te da alas para volar!
+        `);
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add loading animation completion
+            document.body.classList.add('loaded');
+            
+            // Initialize any additional features
+            console.log('🎮 Alas del Conocimiento - Página cargada exitosamente');
+        });
+    </script>
+</body>
+</html>
